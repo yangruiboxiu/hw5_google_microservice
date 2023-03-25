@@ -1,0 +1,23 @@
+steps:
+- name: gcr.io/cloud-builders/git
+  id: checkout
+  args: ['clone', '--recursive', 'https://github.com/yangruiboxiu/hw5_google_microservice', '.']
+- name: 'gcr.io/cloud-builders/python'
+  id: requirements
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    pip install -r requirements.txt
+  env:
+  - 'PYTHON_VERSION=3.8'
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: deploy
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    gcloud app deploy app.yaml --quiet --project=${PROJECT_ID}
+  env:
+  - 'PROJECT_ID=skilful-sphere-381720'
+timeout: 1800s
